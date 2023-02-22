@@ -5,7 +5,7 @@ import ModalCatalog from "../dataTable/ModalCatalog";
 import { showAlert } from "../customers/components/functions/functions";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-const URL_BASE_API = "https://localhost:7240/api/";
+import { FAMA_GET_ENDPOINTS } from "../services/endpoints";
 const columns = [
   {
     label: "Id",
@@ -44,7 +44,7 @@ const CivilStatus = () => {
     getCivilStatus();
   }, []);
   const getCivilStatus = async () => {
-    fetch(`${URL_BASE_API}CivilStatus`)
+    fetch(`${FAMA_GET_ENDPOINTS.civilStatus}`)
       .then((response) => response.json())
       .then((data) => {
         setCivilStatus(data);
@@ -95,7 +95,7 @@ const CivilStatus = () => {
     return true;
   };
   const add = async (parameters) => {
-    var response = await fetch(`${URL_BASE_API}CivilStatus`, {
+    var response = await fetch(`${FAMA_GET_ENDPOINTS.civilStatus}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -122,13 +122,16 @@ const CivilStatus = () => {
     document.getElementById("btnClose").click();
   };
   const edit = async (id, parameters) => {
-    var response = await fetch(`${URL_BASE_API}CivilStatus/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(parameters),
-    })
+    var response = await fetch(
+      `${FAMA_GET_ENDPOINTS.civilStatusCrud.replace("{id}", id)}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(parameters),
+      }
+    )
       .then((response) => {
         return response.json();
       })
@@ -155,12 +158,15 @@ const CivilStatus = () => {
       confirmButtonText: "Yes",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        var response = await fetch(`${URL_BASE_API}CivilStatus/${id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
+        var response = await fetch(
+          `${FAMA_GET_ENDPOINTS.civilStatusCrud.replace("{id}", id)}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
           .then((response) => {
             return response.json();
           })

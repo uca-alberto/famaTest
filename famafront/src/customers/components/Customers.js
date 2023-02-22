@@ -7,7 +7,7 @@ import DataTableList from "./DataTableList";
 import ModalService from "./ModalService";
 import Button from "../../dataTable/Button";
 import { Filter } from "./Filter";
-const URL_BASE_API = "https://localhost:7240/api/";
+import { FAMA_GET_ENDPOINTS } from "../../services/endpoints";
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
   const [customer, setCustomer] = useState({
@@ -44,7 +44,7 @@ const Customers = () => {
   }, []);
 
   const getCustomers = async () => {
-    fetch(`${URL_BASE_API}customers`)
+    fetch(`${FAMA_GET_ENDPOINTS.customers}`)
       .then((response) => response.json())
       .then((data) => {
         setCustomers(data);
@@ -54,7 +54,7 @@ const Customers = () => {
       });
   };
   const getCivilStatus = async () => {
-    fetch(`${URL_BASE_API}CivilStatus`)
+    fetch(`${FAMA_GET_ENDPOINTS.civilStatus}`)
       .then((response) => response.json())
       .then((data) => {
         setCivilStatus(data);
@@ -64,7 +64,7 @@ const Customers = () => {
       });
   };
   const getPersonType = async () => {
-    fetch(`${URL_BASE_API}PersonTypes`)
+    fetch(`${FAMA_GET_ENDPOINTS.personTypes}`)
       .then((response) => response.json())
       .then((data) => {
         setPersonType(data);
@@ -75,7 +75,7 @@ const Customers = () => {
   };
 
   const filterCustomer = async (filter) => {
-    var response = await fetch(`${URL_BASE_API}Customers/filter`, {
+    var response = await fetch(`${FAMA_GET_ENDPOINTS.customerFilter}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -213,7 +213,7 @@ const Customers = () => {
   };
 
   const addCustomer = async (parameters) => {
-    var response = await fetch(`${URL_BASE_API}customers`, {
+    var response = await fetch(`${FAMA_GET_ENDPOINTS.customers}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -236,13 +236,16 @@ const Customers = () => {
     document.getElementById("btnClose").click();
   };
   const editCustomer = async (id, parameters) => {
-    var response = await fetch(`${URL_BASE_API}customers/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(parameters),
-    })
+    var response = await fetch(
+      `${FAMA_GET_ENDPOINTS.customerCrud.replace("{id}", id)}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(parameters),
+      }
+    )
       .then((response) => {
         return response.json();
       })
@@ -270,12 +273,15 @@ const Customers = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         setId(id);
-        var response = await fetch(`${URL_BASE_API}customers/${id}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
+        var response = await fetch(
+          `${FAMA_GET_ENDPOINTS.customerCrud.replace("{id}", id)}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
           .then((response) => {
             return response.json();
           })
